@@ -29,19 +29,22 @@
             color: white;
             border: none;
             border-radius: 5px;
-            height: 25px;
-            width: 50px;
+            height: 30px;
+            width: 80px;
             cursor: pointer;
         }
+        .button-container {
+            display: flex;
+            margin-top: 20px;
+            width: 100px;
+        }
     </style>
-</head>
- <title>서비스 등록</title>
 </head>
 <body>
 <div class="div">
     <h2>회원 등록</h2>
     <form method="post" action="cus_add_proc.jsp" accept-charset="UTF-8">
-   		 <div>
+        <div>
             <label>회원 ID</label>
             <br><input type="text" class="form" name="cus_id" placeholder="아이디를 입력해 주세요.">
         </div>
@@ -51,12 +54,14 @@
             <br><input type="text" class="form" name="cus_name" placeholder="이름을 입력해 주세요.">
         </div>
         <br>
+        <div>
             <label>성별</label>
-            <div class="search-filter" >
-            <select class="form" name="cus_gender">
-                <option value="남자">남자</option>
-                <option value="여자">여자</option>
-            </select>
+            <div class="search-filter">
+                <select class="form" name="cus_gender">
+                    <option value="남자">남자</option>
+                    <option value="여자">여자</option>
+                </select>
+            </div>
         </div>
         <br>
         <div>
@@ -72,18 +77,15 @@
         <div>
             <label>회원 등록일</label>
             <br>
-            <div class="date-filter">
-                <input type="date" class="form" name="cus_regdate" id="regdate">
-            </div>
-        </div>
-        <script>
-            document.getElementById('regdate').valueAsDate = new Date();
-        </script>
+            <input type="date" class="form" name="cus_regdate" id="regdate">
+            <script>
+                document.getElementById('regdate').valueAsDate = new Date();
+            </script>
         </div>
         <br>
         <div>
             <label>회원 등급</label>
-            <div class="search-filter">
+            <br>
             <select class="form" name="cus_rank">
                 <option value="GOLD">GOLD</option>
                 <option value="SILVER">SILVER</option>
@@ -92,16 +94,16 @@
         </div>
         <br>
         <div>
-        	<label>회원 특이사항</label>
-        	<br><input type="text" class="form" name="cus_note" placeholder="특이사항을 입력해 주세요.">
+            <label>회원 특이사항</label>
+            <br><input type="text" class="form" name="cus_note" placeholder="특이사항을 입력해 주세요.">
         </div>
         <br>
         <div class="button-container">
             <button type="submit" onclick="alert('등록되었습니다.')">등록</button>
+            &nbsp;&nbsp;
             <button type="button" onclick="location.href='customer.jsp'">목록</button>
         </div>
     </form>
 </div>
-
 </body>
 </html>

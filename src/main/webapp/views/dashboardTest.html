@@ -6,6 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Line Chart with Fetch</title>
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script>
+    // RMK _ 그래프 정보 수정
+    document.addEventListener('DOMContentLoaded', function () {
+    // 서버에서 데이터 가져오기
+    fetch('/TeamProject/ChartDataServlet') // 서블릿 경로
+        .then(response => response.json())
+        .then(data => {
+            const labels = Object.keys(data);  // x축 라벨
+            const values = Object.values(data);  // y축 값
+         var lineOptions = {
+                         chart: {
+                             type: 'line',
+                         },
+                         series: [{
+                             name: '총 매출',
+                             data: values
+                         }],
+                         xaxis: {
+                             categories: labels
+                         },
+                     };
+                  
+         var line = new ApexCharts(document.querySelector("#line"), lineOptions);
+         line.render();
+        })
+      
+        .catch(error => console.error('Error fetching data:', error));
+});
+  </script>
 </head>
 <body>
   <!-- 차트를 표시할 div -->

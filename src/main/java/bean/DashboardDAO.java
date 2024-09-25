@@ -5,15 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import org.json.simple.JSONArray;
 
 public class DashboardDAO {
     private Context context = null;
@@ -107,76 +107,68 @@ public class DashboardDAO {
                 1> 단일 서비스의 DTO를 생성 _ 상품코드의 두 번째 자리가 0
     */
     // 인스턴스 변수 메서드화 : 리팩토링 예정 
-    String[] services;
-    int[] revenues;
+    String services;
+    String revenues;
     // 이전 매출 현황 조회 시 indexMonth 값 입력 (ex. 이번 달의 경우 0, 한 달 전의 경우 1)
-    public void setServiceMap (int indexMonth) {
-        // 서비스별 월매출액 저장
-        Map<DashboardDTO, Integer> map = new LinkedHashMap<>();
+    public void setService (int indexMonth) {
+        // 서비스별 월매출액 저장용
+        List<DashboardDTO> list = new LinkedList<>();
+        DashboardDTO service;
 		try{
 			connection = dataSource.getConnection();
-            // 단일 서비스를 조회하여 map 구조 초기화
+            // 단일 서비스 조회
             String sql = "SELECT ser_code, ser_name, ser_price FROM ser " +
                     "WHERE ser_code LIKE 'S0__'";  
 			statement = connection.prepareStatement(sql);			
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                DashboardDTO service = new DashboardDTO();
+                service = new DashboardDTO();
                 service.setSer_code(resultSet.getString("ser_code"));
                 service.setSer_name(resultSet.getString("ser_name"));   // 통계 자료에 출력하기 위한 ser_name
                 service.setSer_price(resultSet.getInt("ser_price"));    // 서비스별 이용 요금
-                service.setSer_cnt(0); // 서비스 이용 횟수
-                map.put(service, (service.getSer_price() * service.getSer_cnt()));  // 매출액(value) 0으로 초기화
+                service.setSer_cnt(0); // 서비스 이용 횟수 초기화
+                list.add(service);  // 매출액(value) 0으로 초기화
             }
 
             // 월별 서비스 매출액 조회
 			sql ="SELECT ser_name, res.res_date FROM ser INNER JOIN res " + 
-                    "ON res_date >= DATE_SUB(now(), INTERVAL " + indexMonth + " +5 DAY) " +
-                    "AND res_date <= DATE_SUB(now(), INTERVAL " + indexMonth + " DAY)";
+                    "ON res_date >= DATE_SUB(now(), INTERVAL " + indexMonth + " +1 MONTH) " +
+                    "AND res_date <= DATE_SUB(now(), INTERVAL " + indexMonth + " MONTH)";
 
 			statement = connection.prepareStatement(sql);			
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-            	// 복수 선택 서비스 분리
+            	// 복수 선택 서비스 분리 : 서비스명으로 조회 후 카운트 증가
                 String[] ser_nameArr = resultSet.getString("ser_name").split(",");
                 for (String ser_name : ser_nameArr) {
-                    Set<DashboardDTO> keys = map.keySet();
-                    for (DashboardDTO service : keys) {
-                        if (service.getSer_name().equals(ser_name)) {
-                            // 서비스 시술 횟수 카운트
-                            service.setSer_cnt(service.getSer_cnt() + 1);
-                            // 서비스별 수익 연산
-                            int revenue = (service.getSer_price() * service.getSer_cnt());
-                            map.put(service, map.getOrDefault(service, 0) + revenue);
+                    for (DashboardDTO dto : list) {
+                        if (dto.getSer_name().equals(ser_name)) {
+                            dto.setSer_cnt(dto.getSer_cnt()+1);
                         }
                     }
+                    // if (i>0 && i == list.size()-1) {
+                    //     for (DashboardDTO dto : list) {
+                    //         if (dto.getSer_name().equals("커트")) {
+                    //             dto.setSer_cnt(dto.getSer_cnt()+1);
+                    //         }
+                    //     }
+                    // }
                 }
             }
-            // 복수 선택 시 커트 시술 횟수 추가하기
-			// sql = "SELECT count(*) as cut FROM ser INNER JOIN res " + 
-            //         "ON res_date >= DATE_SUB(now(), INTERVAL " + indexMonth + " +5 DAY) " +
-            //         "AND res_date <= DATE_SUB(now(), INTERVAL " + indexMonth + " DAY)" +
-            //         "WHERE ser_code LIKE 'S1__'";
-			// statement = connection.prepareStatement(sql);			
-            // resultSet = statement.executeQuery();
-            // while(resultSet.next()) {
-            // 	resultSet.getInt("cut");
-            // }
-
-
+            
             // 배열에 저장
-            services = new String[map.size()];
-            revenues = new int[map.size()];
-            Set<DashboardDTO> keys = map.keySet();
-            java.util.Iterator<DashboardDTO> iterator = keys.iterator();
-            // 카운터
-            int i = 0;
-            while (iterator.hasNext()) {
-            	DashboardDTO service = iterator.next();
-                	services[i] = service.getSer_name();
-                	revenues[i] = map.get(service);
-                	i++;
+            String[] servicesArr = new String[list.size()];
+            String[] revenuesArr = new String[list.size()];
+
+            for (int i = 0; i < list.size(); i++) {
+                servicesArr[i] = list.get(i).getSer_name();
+                revenuesArr[i] = String.valueOf(list.get(i).getChart_revenue()/10000);
             }
+            
+            services = "[\"" + String.join("\", \"",  servicesArr) + "\"]";
+            revenues = "[" + String.join(", ",  revenuesArr) + "]";
+            System.out.println(services);
+            System.out.println(revenues);
 		} catch (SQLException e) {
             System.out.println("[getServiceMap] Message : " + e.getMessage());
             System.out.println("[getServiceMap] Class   : " + e.getClass().getSimpleName());
@@ -185,10 +177,10 @@ public class DashboardDAO {
 		}
     }
     // 배열로 return :  JS에 전달용
-    public String[] getServices() {
+    public String getServices() {
         return services;
     }
-    public int[] getRevenues() {
+    public String getRevenues() {
         return revenues;
     }
 }

@@ -226,43 +226,27 @@
                         
                         <div class="col-lg-9 col-md-12">
                             <div class="card">
-									<!-- <div id="bar"></div> -->
-                                    <canvas id="barChart"></canvas>
+                                <div id="bar"></div>
 							</div>
                         </div>
 
-                        <jsp:setProperty name="dashDAO" property="serviceMap" value="0"/>
-                        <!-- 데이터 조회 여부 확인 -->
-
-                         <script>
-                            let services = ["<%= String.join("\", \"", dashDAO.getServices()) %>"];
-                            let revenues = [<%= java.util.Arrays.toString(dashDAO.getRevenues()).replaceAll("[\\[\\]]", "") %>];
-                        </script> 
-                        	<!-- 그래프 설정 완료 시 별도 파일로 분리 예정 -->
+                        <jsp:setProperty name="dashDAO" property="service" value="0"/>
+                        <%
+                            request.setCharacterEncoding("utf-8");
+                            String services = dashDAO.getServices();
+                            String revenues = dashDAO.getRevenues();
+                        %>
+                        <!-- 외부 JS 파일에 데이터 전달 -->
+                        <script src="assets/js/pages/ui-apexchart.js"></script>
                         <script>
-                            let barChart = document.getElementById("barChart");
-
-                            let bar = new Chart(barChart, {
-                                type : "bar",
-                                data : {
-                                    labels : services,    // x축 데이터 (문자열 입력)
-                                    datasets : [{
-                                        label : "월별 서비스 매출 현황", // 그래프 이름 (N월 서비스 매출 현황)
-                                        data : revenues,    // y축 데이터 (문자열 입력 _ x축 데이터와 동일한 개수)
-                                        backgroundColor : [
-                                            "rgb(150, 200, 250)",
-                                            "rgb(150, 200, 250)",
-                                            "rgb(150, 200, 250)"
-                                        ],
-                                        borderWidth : .5,
-                                        borderColor : "rgb(50, 50, 50)",
-                                        borderRadius : 10,
-                                        hoverBorderWidth : 1,
-                                        maxBarThickness: 60,
-                                    }]
-                                }
-                            })
+                            console.log('<%= services %>');
+                            console.log('<%= revenues %>');
+                            let services = JSON.parse('<%= services %>');
+                            let revenues = JSON.parse('<%= revenues %>');
+                            console.log(services + revenues);
+                            getServiceRevenueChart(services, revenues);
                         </script> 
+
                         
                     </div>
                 </section>
@@ -386,7 +370,7 @@
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script src="assets/vendors/apexcharts/apexcharts.js"></script>
 <script src="assets/js/pages/dashboard.js"></script>
-<script src="assets/js/pages/ui-apexchart.js"></script>
+<!-- <script src="assets/js/pages/ui-apexchart.js"></script> --><!-- 그래프 ui 설정 변경 js 파일 _ 축별 설정 및 데이터 전달 시 해당 파일 참조 -->
 <script src="assets/js/main.js"></script>
 <script src="assets/js/calendar.js" defer></script>
 </body>

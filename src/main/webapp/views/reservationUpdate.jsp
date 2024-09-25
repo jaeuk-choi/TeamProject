@@ -217,14 +217,14 @@
                             <div class="col-lg-12 mb-12">
                                 <div class="input-group mb-12">
                                     <span class="input-group-text" id="basic-addon1">예약 날짜</span>
-                                    <input type="date" class="form-control" name="res_date" >
+                                    <input type="date" class="form-control" name="res_date" value="<%= resDto.getRes_date() %>">
                                 </div>
                             </div>
                             <br><br><br>
                             <div class="col-lg-12 mb-12">
                                 <div class="input-group mb-12">
                                     <span class="input-group-text" id="basic-addon1">예약 시간</span>
-                                    <input type="time" class="form-control" name="res_time">
+                                    <input type="time" class="form-control" name="res_time" value="<%= resDto.getRes_time() %>">
                                 </div>
                             </div>
                             <br><br><br>

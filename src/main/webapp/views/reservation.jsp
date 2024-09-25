@@ -33,6 +33,7 @@
 		int pagePerBlock = 5; // 블럭 당 페이지 수
 		int totalBlock = 0; //총 블럭 수
 		int nowBlock = 0; //현재 블럭
+		
     
     	//검색 후 페이지로 돌아갔을때 가지고갈 요소들
         String keyField = request.getParameter("keyField");
@@ -53,6 +54,7 @@
         
         if(request.getParameter("nowBlock") != null)
            nowBlock = Integer.parseInt(request.getParameter("nowBlock"));
+     	
     %>
     <div id="app">
         <div id="sidebar" class="active">
@@ -192,22 +194,42 @@
                     </div>
                     <div class="col-12 d-flex justify-content-center align-items-center">
                         <nav aria-label="Page navigation example">
-                            <ul class="pagination pagination-primary">
-                            <% if(nowBlock>0){ %>
-                                <li class="page-item">
-                                <a class="page-link" href="reservation.jsp?nowPage=<%= ((nowBlock-1)*pagePerBlock) %>&nowBlock=<%= nowBlock-1%>">
-                                <span aria-hidden="true"><i class="bi bi-chevron-left"></i></span></a></li>
-                            <% } %>  
-                            <% for (int i=0; i<pagePerBlock; i++){ %>
-                                <li class="page-item active"><a class="page-link" href="reservation.jsp?nowPage=<%=(nowBlock*pagePerBlock)+i%>&nowBlock=<%=nowBlock%>">
-                                <%=(nowBlock * pagePerBlock)+i +1 %></a></li>
-                            <% } %>   
-                            <% if(totalBlock>nowBlock+1){ %>
-                                <li class="page-item"><a class="page-link" href="reservation.jsp?nowPage=<%=(nowBlock+1)*pagePerBlock%>&nowBlock=<%=nowBlock+1%>">
-                                <span aria-hidden="true"><i class="bi bi-chevron-right"></i></span></a></li>
-                            <% } %>
-                            </ul>
-                        </nav>
+							<ul class="pagination pagination-primary">
+							<!-- 왼쪽 화살표 이동 기능 -->
+								<% if(nowPage == 0) { %>
+									<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+										<span aria-hidden="true"><i class="bi bi-chevron-left"></i></span></a></li>
+								<% } else {%>
+									<li class="page-item"><a class="page-link" href="reservation.jsp?nowPage=<%=((nowBlock - 1) * pagePerBlock)%>&nowBlock=<%=nowBlock - 1%>">
+										<span aria-hidden="true"><i class="bi bi-chevron-left"></i></span></a></li>
+								<% } %>
+
+								<!-- 페이지 반복 -->
+								<%
+									for (int i = 0; i < pagePerBlock; i++) {
+										int currentPage = (nowBlock * pagePerBlock) + i;
+										if (currentPage >= totalPage)
+											break;
+								%>
+										<li class="page-item <%=currentPage == nowPage ? "active" : ""%>">
+										<a class="page-link" href="reservation.jsp?nowPage=<%=currentPage%>&nowBlock=<%=nowBlock%>">
+											<%=currentPage + 1%></a>
+										</li>
+								<%
+									}
+								%>
+
+								<!-- 오른쪽 화살표 이동 기능 -->
+								<% if(nowBlock >= totalBlock-1) { %>
+									<li class="page-item disabled"><a class="page-link" href="#">
+										<span aria-hidden="true"><i class="bi bi-chevron-right"></i></span></a></li>
+								<% } else {%>
+								
+								<li class="page-item"><a class="page-link" href="reservation.jsp?nowPage=<%=(nowBlock + 1) * pagePerBlock%>&nowBlock=<%=nowBlock + 1%>">
+										<span aria-hidden="true"><i class="bi bi-chevron-right"></i></span></a></li>
+								<% } %>
+							</ul>
+						</nav>
                     </div>
                 </section>
                 <footer>

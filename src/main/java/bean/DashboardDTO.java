@@ -5,7 +5,7 @@ public class DashboardDTO {
     private int pd_ea;
     private String res_time;
 	private String ser_name;
-    private String ser_code;
+	private String ser_code;
     private int ser_price; 
     private int ser_cnt;
     
@@ -50,5 +50,9 @@ public class DashboardDTO {
 	}
 	public void setSer_cnt(int ser_cnt) {
 		this.ser_cnt = ser_cnt;
+	}
+	/* 월별 서비스 매출 */
+	public int getChart_revenue() {
+		return ser_price * ser_cnt;
 	}
 }

@@ -229,61 +229,112 @@ public class ReservationDAO {
     }
     
     
-    //reservationUpdateProc.jsp
+    //reservationUpdateProc.jsp 
     public void updateReservationDTO(ReservationDTO resDto) {
-    	String sql = null;
-    	
-    	try {
-    		context = new InitialContext();
-    		dataSource = (DataSource)context.lookup("java:comp/env/jdbc/acorn");
-    		connection = dataSource.getConnection();
-    		
-    		// cus_id와 ser_code를 조회하는 쿼리
-    		sql = "SELECT c.cus_id, s.ser_code FROM cus c, ser s WHERE c.cus_name = ? AND s.ser_name = ?";
-    		statement = connection.prepareStatement(sql);
-    		statement.setString(1, resDto.getCus_name());
-    		statement.setString(2, resDto.getSer_name());
+        String sql = null;
 
-    		resultSet = statement.executeQuery();
+        try {
+            context = new InitialContext();
+            dataSource = (DataSource)context.lookup("java:comp/env/jdbc/acorn");
+            connection = dataSource.getConnection();
+            
+            // res 테이블에서 기존 ser_code 조회
+            sql = "SELECT ser_code FROM res WHERE res_no = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, resDto.getRes_no()); 
+            resultSet = statement.executeQuery();
+            
+            String old_ser_code = null;
+            if (resultSet.next()) {
+                old_ser_code = resultSet.getString("ser_code");
+            }
+            
+            // cus_id와 ser_code를 조회하는 쿼리
+            sql = "SELECT c.cus_id, s.ser_code FROM cus c, ser s WHERE c.cus_name = ? AND s.ser_name = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, resDto.getCus_name());
+            statement.setString(2, resDto.getSer_name());
+            resultSet = statement.executeQuery();
+            
+            if (resultSet.next()) {
+                int cus_id = resultSet.getInt("cus_id");
+                String new_ser_code = resultSet.getString("ser_code");
 
-    		if(resultSet.next()) {
-    		    int cus_id = resultSet.getInt("cus_id");
-    		    String ser_code = resultSet.getString("ser_code");
+                // ser_code가 변경된 경우에만 ser_cnt 수정
+                if (!old_ser_code.equals(new_ser_code)) {
+                    // 기존 ser_code의 ser_cnt 감소
+                    sql = "UPDATE ser SET ser_cnt = ser_cnt - 1 WHERE ser_code = ?";
+                    statement = connection.prepareStatement(sql);
+                    statement.setString(1, old_ser_code);
+                    statement.executeUpdate();
 
-    		    // res 테이블에 삽입하는 쿼리
-    		    sql = "UPDATE res SET cus_id=?, ser_code=?, res_date=?, res_time=?, res_comm=? WHERE res_no=?";
-    		    statement = connection.prepareStatement(sql);
-    		    statement.setInt(1, cus_id);
-    		    statement.setString(2, ser_code);
-    		    statement.setString(3, resDto.getRes_date());
-    		    statement.setString(4, resDto.getRes_time());
-    		    statement.setString(5, resDto.getRes_comm());
-    		    statement.setInt(6, resDto.getRes_no()); 
-    		    statement.executeUpdate();
-    		    
-    		    //수정할 항목의 ser_cnt 감소
-    		    /*
-    		    sql = "UPDATE ser SET ser_cnt = ser_cnt - 1 WHERE ser_code = ?";
-    		    statement = connection.prepareStatement(sql);
-    		    statement.setString(1, ser_code);
-    		    statement.executeUpdate();
-    		    */
-    		    
-    		    //수정한 항목의 ser_cnt 증가
-    		    /*
-    		    sql = "UPDATE ser SET ser_cnt = ser_cnt + 1 WHERE ser_code = ?";
-    		    statement = connection.prepareStatement(sql);
-    		    statement.setString(1, ser_code);
-    		    statement.executeUpdate();
-    		    */
-    		}
-    	}
-    	catch (Exception err) {
-    		System.out.println("Error : " + err);
-    	}
-    	finally {
-    		freeConnection();
-    	}
+                    // 새로운 ser_code의 ser_cnt 증가
+                    sql = "UPDATE ser SET ser_cnt = ser_cnt + 1 WHERE ser_code = ?";
+                    statement = connection.prepareStatement(sql);
+                    statement.setString(1, new_ser_code);
+                    statement.executeUpdate();
+                }
+
+                // res 테이블 수정
+                sql = "UPDATE res SET cus_id = ?, ser_code = ?, res_date = ?, res_time = ?, res_comm = ? WHERE res_no = ?";
+                statement = connection.prepareStatement(sql);
+                statement.setInt(1, cus_id);
+                statement.setString(2, new_ser_code);
+                statement.setString(3, resDto.getRes_date());
+                statement.setString(4, resDto.getRes_time());
+                statement.setString(5, resDto.getRes_comm());
+                statement.setInt(6, resDto.getRes_no());
+                statement.executeUpdate();
+            }
+        } catch (Exception err) {
+            System.out.println("Error : " + err);
+        } finally {
+            freeConnection();
+        }
     }
+
     
-}
+    //reservationDelete.jsp
+	public void deleteReservationDTO(int res_no) throws SQLException {
+
+		String sql;
+
+		try {
+			context = new InitialContext();
+			dataSource = (DataSource) context.lookup("java:comp/env/jdbc/acorn");
+			connection = dataSource.getConnection();
+
+			// res 테이블에서 ser_code 조회
+			sql = "SELECT ser_code FROM res WHERE res_no=?";
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, res_no);
+			resultSet = statement.executeQuery();
+
+			// resultSet을 통해 ser_code를 가져옴
+			String ser_code = null;
+			if (resultSet.next()) {
+				ser_code = resultSet.getString("ser_code");
+			}
+
+			// 예약 삭제하는 쿼리
+			sql = "DELETE FROM res WHERE res_no=?";
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, res_no);
+			statement.executeUpdate();
+
+			// ser_cnt 감소하는 쿼리
+			sql = "UPDATE ser SET ser_cnt = ser_cnt - 1 WHERE ser_code = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, ser_code);
+			statement.executeUpdate();
+
+		} catch (Exception err) {
+			System.out.println("Error : " + err);
+		} finally {
+			freeConnection();
+		}
+	  }
+	
+	
+	
+    }
