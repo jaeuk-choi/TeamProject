@@ -201,7 +201,7 @@
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="login.jsp">로그아웃</a></li>
+                                    <li class="breadcrumb-item"><a href="/TeamProject/logout">로그아웃</a></li> 
                                 </ol>
                             </nav>
                         </div>
