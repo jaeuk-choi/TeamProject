@@ -97,15 +97,13 @@ public class ProductDAO {
 	public List<ProductDTO> getProductList(String pd_B_code, String keyWord) {
 		String sql = "";
 		ArrayList<ProductDTO> list = new ArrayList<>();
-		
+		System.out.println(keyWord);
 		if(keyWord == null || keyWord.isEmpty()) {
         	sql = "SELECT pd.pd_code, pd.pd_name, pd.pd_price, pd.pd_ea "
                 + "FROM pd "
                 + "JOIN pd_B ON pd.pd_B_code = pd_B.pd_B_code "
                 + "WHERE pd_B.pd_B_code=?";
         } else {
-        	System.out.println("키워드 존재");
-        	System.out.println(keyWord);
         	sql = "SELECT pd.pd_code, pd.pd_name, pd.pd_price, pd.pd_ea "
                 + "FROM pd "
                 + "JOIN pd_B ON pd.pd_B_code = pd_B.pd_B_code "
