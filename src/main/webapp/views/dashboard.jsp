@@ -213,17 +213,18 @@
                         <div class="col-lg-3 col-md-12">
                             <h3>DASH BOARD</h3>
                         </div>
-                        <div class="col-lg-6"></div>
-                        <div class="col-lg-3 col-md-12">
+                        <div class="col-lg-6 "></div>
+                        
+                        <div class="col-lg-3 col-md-12 d-flex justify-content-end align-items-end">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                <ol class="breadcrumb" style="margin-bottom : 0px; vertical-align: middle">                                	
+                                <ol class="breadcrumb">
                                     <li>
-                                    	<i class="bi bi-person-fill" style="margin-bottom : 0px; vertical-align: middle"></i>
-                                    	<i class="bi bi-bell-fill" style="margin-bottom : 0px; vertical-align: middle"></i>
-                                    	<a href="login.jsp" class="badges badge bg-light-danger">로그아웃</a>
-                                   	</li>
+                                    <i class="bi bi-person-fill" style="font-size:x-large;" ></i>
+                       	 			<i class="bi bi-bell-fill" style="font-size:larger;" ></i>
+                        			<a href="login.jsp"><span class="badges badge bg-light-danger">로그아웃<i class="bi bi-box-arrow-right " ></i></span></a>
+                        			</li>
                                 </ol>
-                            </nav>
+                            </nav>                        
                         </div>
                     </div>
                 </div>
