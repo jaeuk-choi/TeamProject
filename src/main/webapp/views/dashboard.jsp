@@ -262,7 +262,8 @@
                         		console.log('<%= revenues %>');
                             let services = JSON.parse('<%= services %>');
                             let revenues = JSON.parse('<%= revenues %>');
-                            console.log(services, revenues);
+                            console.log(services);
+                            console.log(revenues);
                             getServiceRevenueChart(services, revenues);
                         </script> 
 
