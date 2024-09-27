@@ -185,7 +185,7 @@ public class DashboardDAO {
         return revenues;
     }
     
-    // 달력에서 선택된 날짜에 대한 예약현황 데이터 가져오기
+    // == 달력에서 선택된 날짜에 대한 예약현황 데이터 가져오기 로직 시작 ==
     private String selectedDateStr = null;
     
     /**
@@ -203,14 +203,14 @@ public class DashboardDAO {
      */
     public List<DashboardDTO> getReservationByDate() {
 		if (this.selectedDateStr == null) return null;
-		Date selectedDate = Date.valueOf(selectedDateStr);
+		Date selectedDate = Date.valueOf(this.selectedDateStr);
     	
 		String sql = """
-				SELECT a.res_time, b.ser_name 
-					FROM res a 
-					INNER JOIN ser b 
-						ON a.ser_code = b.ser_code 
-						WHERE res_date=? ORDER BY res_time
+				SELECT a.reservation_time, b.service_name 
+					FROM reservation a 
+					INNER JOIN service b 
+						ON a.service_code = b.service_code 
+						WHERE reservation_date=? ORDER BY reservation_time
 				""".trim();
 		ArrayList<DashboardDTO> list = new ArrayList<>();
 		try {
@@ -221,18 +221,19 @@ public class DashboardDAO {
 			
 			while(resultSet.next()){
 				DashboardDTO board = new DashboardDTO();
-				board.setRes_time(resultSet.getString("res_time"));
-				board.setSer_name(resultSet.getString("ser_name"));
+				
+				board.setReservation_time(resultSet.getString("reservation_time"));
+				board.setService_name(resultSet.getString("service_name"));
 				
 				list.add(board);
 			}
 		} catch (SQLException e) {
-            System.out.println("[getReservation] Message : " + e.getMessage());
-            System.out.println("[getReservation] Class   : " + e.getClass().getSimpleName());
+            System.out.println("[getReservationByDate] Message : " + e.getMessage());
+            System.out.println("[getReservationByDate] Class   : " + e.getClass().getSimpleName());
         } finally {
 			freeConnection();
 		}
 		return list;
 	}
-    // 달력에서 선택된 날짜에 대한 예약현황 데이터 가져오기 끝 ===
+    // == 달력에서 선택된 날짜에 대한 예약현황 데이터 가져오기 로직 끝 ===
 }

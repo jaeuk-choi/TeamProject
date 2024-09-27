@@ -1,5 +1,4 @@
-<%@page import="bean.DashboardDAO"%>
-<%@page import="bean.DashboardDTO"%>
+<%@page import="bean.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -11,6 +10,8 @@
 <style>
 	#explainTest {
 		border: 1px solid black;
+		padding: 1em;
+		margin: 1em;
 	}
 </style>
 </head>
@@ -23,7 +24,7 @@
 				<li>
 					java.bean.DashBoardDAO
 					<ul>
-						<li>public List<DashboardDTO> getReservationByDate()</li>
+						<li>public List&lt;DashboardDTO&gt; getReservationByDate()</li>
 						<li>public void setSelectedDate(String selectedDateStr)</li>
 					</ul>
 				</li>
@@ -66,8 +67,8 @@
 							</c:when>
 							<c:otherwise>
 								<tr>
-									<td>${ empty oneRecord.res_time ? "-" : oneRecord.res_time }</td>
-									<td>${ empty oneRecord.ser_name ? "-" : oneRecord.ser_name }</td>
+									<td>${ empty oneRecord.reservation_time ? "-" : oneRecord.reservation_time }</td>
+									<td>${ empty oneRecord.service_name ? "-" : oneRecord.service_name }</td>
 								</tr>
 							</c:otherwise>
 						</c:choose>
