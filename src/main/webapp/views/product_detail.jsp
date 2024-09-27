@@ -60,10 +60,7 @@
             nowBlock = Integer.parseInt(request.getParameter("nowBlock"));
         }
 		
-		out.println("jsp if문 밖 : " + keyWord);
 		if (pd_B_code != null && !pd_B_code.isEmpty()) {
-			
-			out.println("jsp 파일 안 : " + keyWord);
 			ArrayList<ProductDTO> list = (ArrayList<ProductDTO>) prodDAO.getProductList(pd_B_code, keyWord);
 			
 			prodDAO.getProductList(pd_B_code, keyWord);

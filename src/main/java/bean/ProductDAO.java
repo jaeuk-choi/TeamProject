@@ -97,7 +97,7 @@ public class ProductDAO {
 	public List<ProductDTO> getProductList(String pd_B_code, String keyWord) {
 		String sql = "";
 		ArrayList<ProductDTO> list = new ArrayList<>();
-		System.out.println(keyWord);
+		
 		if(keyWord == null || keyWord.isEmpty()) {
         	sql = "SELECT pd.pd_code, pd.pd_name, pd.pd_price, pd.pd_ea "
                 + "FROM pd "
