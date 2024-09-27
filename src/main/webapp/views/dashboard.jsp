@@ -29,8 +29,32 @@
 			overflow: hidden; /* 넘치는 텍스트 숨기기 */
 			text-overflow: ellipsis; /* 넘치는 부분 '...'으로 표시 */
 			max-width: 150px; /* 최대 너비 설정 */
+			padding-bottom: 0px;
+		}		
+		.bi-plus-square {
+			display: inline-block;
+			transform: translateY(2px);
+		}
+		.bi-person-fill{
+			display: inline-block;
+			transform: translateY(6px);
+			margin-right: 5px;
+		}
+		.bi-bell-fill{
+			display: inline-block;
+			transform: translateY(3px);
+			margin-right: 5px;
+		}
+		.bi-box-arrow-right{
+			display: inline-block;
+			transform: translateY(3px);
 		}
 	</style>
+    <!-- 통계 그래프 출력용 스크립트(type="text/javascript") -->
+    <script type="module">
+        // assets
+        getServiceRevenueChart();
+    </script>
 </head>
 
 <body>
@@ -56,8 +80,8 @@
 			}
 			if(nowPage1 == totalPage1){
 				nowPage1 = 0;
-			}											
-		}		
+			}
+		}
 		beginPerPage1 = nowPage1*numPerPage;
 		
 		int totalRecord2 = 0; 	//총 글의 개수
@@ -213,17 +237,18 @@
                         <div class="col-lg-3 col-md-12">
                             <h3>DASH BOARD</h3>
                         </div>
-                        <div class="col-lg-6"></div>
-                        <div class="col-lg-3 col-md-12">
+                        <div class="col-lg-6 "></div>
+                        
+                        <div class="col-lg-3 col-md-12 d-flex justify-content-end align-items-end">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                <ol class="breadcrumb" style="margin-bottom : 0px; vertical-align: middle">                                	
+                                <ol class="breadcrumb">
                                     <li>
-                                    	<i class="bi bi-person-fill" style="margin-bottom : 0px; vertical-align: middle"></i>
-                                    	<i class="bi bi-bell-fill" style="margin-bottom : 0px; vertical-align: middle"></i>
-                                    	<a href="login.jsp" class="badges badge bg-light-danger">로그아웃</a>
-                                   	</li>
+                                    <i class="bi bi-person-fill" style="font-size:x-large;" ></i>
+                       	 			<i class="bi bi-bell-fill" style="font-size:larger; line-height: 10px;" ></i>
+                        			<a href="login.jsp"><span class="badges badge bg-light-danger">로그아웃</span>&nbsp;<i class="bi bi-box-arrow-right " ></i></a>
+                        			</li>
                                 </ol>
-                            </nav>
+                            </nav>                        
                         </div>
                     </div>
                 </div>
@@ -243,12 +268,6 @@
 	                        </div>
                         </div>
 
-                        
-                        <div class="col-lg-9 col-md-12">
-                            <div class="card">
-                                <div id="bar"></div>
-							</div>
-                        </div>
 
                         <jsp:setProperty name="dashDAO" property="service" value="0"/>
                         <%
@@ -266,6 +285,12 @@
                             console.log(revenues);
                             getServiceRevenueChart(services, revenues);
                         </script> 
+                        
+                        <div class="col-lg-9 col-md-12">
+                            <div class="card">
+                                <div id="bar"></div>
+							</div>
+                        </div>
 
                         
                     </div>
@@ -293,7 +318,7 @@
 									%>
 										<tr>
 											<td align="center" colspan="2" class="calendar-wrapper">
-												<a href="dashboard.jsp?nowPage1=<%=nowPage1 - 1%>&nowPage2=<%=nowPage2%>"><span id="prev" class="icons material-symbols-rounded">chevron_left</span></a>
+												<a href="dashboard.jsp?nowPage1=<%=nowPage1 - 1%>&nowPage2=<%=nowPage2%>"><span id="prev" class="icons material-symbols-rounded" style="display: inline-block; transform: translateY(3px);">chevron_left</span></a>
 											<%												
 												for(int i=0; i < totalPage1; i++){
 											%>
@@ -301,7 +326,7 @@
 											<%
 												}
 											%>
-												<a href="dashboard.jsp?nowPage1=<%=nowPage1 + 1%>&nowPage2=<%=nowPage2%>"><span id="next" class="icons material-symbols-rounded">chevron_right</span></a>
+												<a href="dashboard.jsp?nowPage1=<%=nowPage1 + 1%>&nowPage2=<%=nowPage2%>"><span id="next" class="icons material-symbols-rounded" style="display: inline-block; transform: translateY(3px);">chevron_right</span></a>
 
 											</td>
 										</tr>
@@ -353,7 +378,7 @@
 									%>
 										<tr>
 											<td align="center" colspan="2" class="calendar-wrapper">
-												<a href="dashboard.jsp?nowPage1=<%=nowPage1%>&nowPage2=<%=nowPage2 - 1%>"><span id="prev" class="icons material-symbols-rounded">chevron_left</span></a>
+												<a href="dashboard.jsp?nowPage1=<%=nowPage1%>&nowPage2=<%=nowPage2 - 1%>"><span id="prev" class="icons material-symbols-rounded" style="display: inline-block; transform: translateY(3px);">chevron_left</span></a>
 											<%												
 												for(int i=0; i < totalPage2; i++){
 											%>
@@ -361,7 +386,7 @@
 											<%
 												}
 											%>
-												<a href="dashboard.jsp?nowPage1=<%=nowPage1%>&nowPage2=<%=nowPage2 + 1%>"><span id="next" class="icons material-symbols-rounded">chevron_right</span></a>
+												<a href="dashboard.jsp?nowPage1=<%=nowPage1%>&nowPage2=<%=nowPage2 + 1%>"><span id="next" class="icons material-symbols-rounded " style="display: inline-block; transform: translateY(3px);">chevron_right</span></a>
 
 											</td>
 										</tr>
