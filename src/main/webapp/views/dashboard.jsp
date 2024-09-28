@@ -11,17 +11,17 @@
     <title>DashBoard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="assets/css/calendar.css">
+    <link rel="stylesheet" href="/TeamProject/views/assets/css/calendar.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">    
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <link rel="stylesheet" href="assets/vendors/iconly/bold.css">
-    <link rel="stylesheet" href="assets/vendors/apexcharts/apexcharts.css">
-    <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
-    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
-    <link rel="stylesheet" href="assets/css/app.css">
-    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="/TeamProject/views/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/TeamProject/views/assets/vendors/iconly/bold.css">
+    <link rel="stylesheet" href="/TeamProject/views/assets/vendors/apexcharts/apexcharts.css">
+    <link rel="stylesheet" href="/TeamProject/views/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/TeamProject/views/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/TeamProject/views/assets/css/app.css">
+    <link rel="shortcut icon" href="/TeamProject/views/assets/images/favicon.svg" type="image/x-icon">
 
 	<style>
 		td {
@@ -201,7 +201,7 @@
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="/TeamProject/logout">로그아웃</a></li> 
+                                	<li class="breadcrumb-item"><a href="/TeamProject/logout">로그아웃</a></li> 
                                 </ol>
                             </nav>
                         </div>
@@ -236,7 +236,7 @@
                             String services = dashDAO.getServices();
                             String revenues = dashDAO.getRevenues();
                         %>
-                        <!-- 외부 JS 파일에 데이터 전달 -->
+                        <!-- 외부 JS 파일에 데이터 전달  -->
                         <script src="assets/js/pages/ui-apexchart.js"></script>
                         <script>
                             console.log('<%= services %>');

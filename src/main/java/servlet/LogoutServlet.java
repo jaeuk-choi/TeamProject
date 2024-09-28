@@ -19,7 +19,6 @@ public class LogoutServlet extends HttpServlet {
 		System.out.println("로그아웃 성공");
 		// 페이지 이동
 		resp.sendRedirect("/TeamProject/views/login.jsp"); // 로그인 페이지로 이동
-		
 	}
 
 	@Override
