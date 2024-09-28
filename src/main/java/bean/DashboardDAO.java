@@ -1,6 +1,7 @@
 package bean;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -182,4 +183,56 @@ public class DashboardDAO {
     public String getRevenues() {
         return revenues;
     }
+    
+    // == 달력에서 선택된 날짜에 대한 예약현황 데이터 가져오기 로직 시작 ==
+    private String selectedDateStr = null;
+    
+    /**
+     * 달력에서 사용자가 선택한 날짜 정보 설정. 
+     * @param selectedDateStr - yyyy-mm-dd 형태.
+     */
+    public void setSelectedDate(String selectedDateStr) {
+    	this.selectedDateStr = selectedDateStr;
+    }
+    
+    /**
+     * setSelectedDate() 메서드를 통해 설정된 날짜 데이터를 조건으로 하는 
+     * 예약 날짜 및 예약 서비스명 데이터 모두 추출.
+     * @return
+     */
+    public List<DashboardDTO> getReservationByDate() {
+		if (this.selectedDateStr == null) return null;
+		Date selectedDate = Date.valueOf(this.selectedDateStr);
+    	
+		String sql = """
+				SELECT a.reservation_time, b.service_name 
+					FROM reservation a 
+					INNER JOIN service b 
+						ON a.service_code = b.service_code 
+						WHERE reservation_date=? ORDER BY reservation_time
+				""".trim();
+		ArrayList<DashboardDTO> list = new ArrayList<>();
+		try {
+			connection = dataSource.getConnection();			
+			statement = connection.prepareStatement(sql);
+			statement.setDate(1, selectedDate);
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()){
+				DashboardDTO board = new DashboardDTO();
+				
+				board.setReservation_time(resultSet.getString("reservation_time"));
+				board.setService_name(resultSet.getString("service_name"));
+				
+				list.add(board);
+			}
+		} catch (SQLException e) {
+            System.out.println("[getReservationByDate] Message : " + e.getMessage());
+            System.out.println("[getReservationByDate] Class   : " + e.getClass().getSimpleName());
+        } finally {
+			freeConnection();
+		}
+		return list;
+	}
+    // == 달력에서 선택된 날짜에 대한 예약현황 데이터 가져오기 로직 끝 ===
 }
