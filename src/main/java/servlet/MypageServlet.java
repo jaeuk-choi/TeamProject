@@ -30,7 +30,6 @@ public class MypageServlet extends HttpServlet{
 		String tel = req.getParameter("tel");
 		String email = req.getParameter("email");
 		
-		// DB 연동
 		MypageDTO dto = new MypageDTO();
 		dto.setBranch_code(branchcode);
 		dto.setManager_name(name);
@@ -42,14 +41,6 @@ public class MypageServlet extends HttpServlet{
 		
 		// 페이지 이동
 		resp.sendRedirect("/TeamProject/views/mypage_update_view.jsp");
-//		String command = req.getParameter("command");
-//		String url = "";
 //		
-//		if(command.equals("LOGIN")) {
-//			url = "/views/login.jsp";
-//		}
-//		
-//		RequestDispatcher dispatcher = req.getRequestDispatcher(url);
-//		dispatcher.forward(req, resp);
 	}
 }
