@@ -174,26 +174,30 @@ public class CustomerDAO {
     }
     
     
-    //reservationPost.jsp 
- // 예약자명 조회
-    public List<String> getAllCustomerNames() throws SQLException {
-        List<String> customerNames = new ArrayList<>();
-        String sql = "SELECT cus_name FROM cus";
-
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                customerNames.add(resultSet.getString("cus_name"));
-            }
-        } catch (SQLException e) {
+  //reservationPost.jsp 
+    //예약자명 조회
+    public List<String> getAllCustomerNames() throws SQLException{
+		List<String> customerNames = new ArrayList<>();
+		String query = "SELECT customer_name FROM customer"; //'cus' 테이블에서 회원명 가져옴
+    	
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(query);
+			
+			//statement.setString(1, "customer_name");
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()) {
+				customerNames.add(resultSet.getString("customer_name"));
+			}
+		} 
+		catch (SQLException e) {
             System.out.println("[getAllCustomerNames] Message : " + e.getMessage());
             System.out.println("[getAllCustomerNames] Class   : " + e.getClass().getSimpleName());
-        } finally {
-            freeConnection();
         }
-        return customerNames;
+		finally {
+			freeConnection();
+		}
+		return customerNames;
     }
 }
