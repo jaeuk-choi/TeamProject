@@ -50,8 +50,8 @@ public class DashboardDAO {
         }
     }
 
-	public List<DashboardDTO> getProduct() {
-		String sql = "SELECT pd_name, pd_ea FROM pd WHERE pd_ea < 4 ORDER BY pd_ea";
+	public List<DashboardDTO> getNotice() {
+		String sql = "SELECT notice_title FROM notice WHERE notice_check = 1 ORDER BY notice_reg desc";
 		ArrayList<DashboardDTO> list = new ArrayList<>();
 		try {
 			connection = dataSource.getConnection();			
@@ -60,8 +60,31 @@ public class DashboardDAO {
 			
 			while(resultSet.next()){
 				DashboardDTO board = new DashboardDTO();
-				board.setPd_name(resultSet.getString("pd_name"));
-				board.setPd_ea(resultSet.getInt("pd_ea"));
+				board.setNotice_title(resultSet.getString("notice_title"));
+				
+				list.add(board);
+			}
+		} catch (SQLException e) {
+            System.out.println("[getNotice] Message : " + e.getMessage());
+            System.out.println("[getNotice] Class   : " + e.getClass().getSimpleName());
+        } finally {
+			freeConnection();
+		}
+		return list;
+	}    
+    
+	public List<DashboardDTO> getProduct() {
+		String sql = "SELECT product_name, product_ea FROM pd WHERE product_ea < 4 ORDER BY product_ea";
+		ArrayList<DashboardDTO> list = new ArrayList<>();
+		try {
+			connection = dataSource.getConnection();			
+			statement = connection.prepareStatement(sql);
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()){
+				DashboardDTO board = new DashboardDTO();
+				board.setProduct_name(resultSet.getString("product_name"));
+				board.setProduct_ea(resultSet.getInt("product_ea"));
 				
 				list.add(board);
 			}
@@ -75,7 +98,7 @@ public class DashboardDAO {
 	}
     
 	public List<DashboardDTO> getReservation() {
-		String sql = "SELECT a.res_time, b.ser_name FROM res a INNER JOIN ser b ON a.ser_code = b.ser_code WHERE res_date=CURDATE() ORDER BY res_time";
+		String sql = "SELECT a.reservation_time, b.service_name FROM reservation a INNER JOIN service b ON a.service_code = b.service_code WHERE reservation_date=CURDATE() ORDER BY reservation_time";
 		ArrayList<DashboardDTO> list = new ArrayList<>();
 		try {
 			connection = dataSource.getConnection();			
@@ -84,8 +107,8 @@ public class DashboardDAO {
 			
 			while(resultSet.next()){
 				DashboardDTO board = new DashboardDTO();
-				board.setRes_time(resultSet.getString("res_time"));
-				board.setSer_name(resultSet.getString("ser_name"));
+				board.setReservation_time(resultSet.getTimestamp("reservation_time"));
+				board.setService_name(resultSet.getString("service_name"));
 				
 				list.add(board);
 			}
@@ -119,33 +142,33 @@ public class DashboardDAO {
 		try{
 			connection = dataSource.getConnection();
             // 단일 서비스 조회
-            String sql = "SELECT ser_code, ser_name, ser_price FROM ser " +
-                    "WHERE ser_code LIKE 'S0__'";  
+            String sql = "SELECT service_code, service_name, service_price FROM service " +
+                    "WHERE service_code LIKE 'S0__'";  
 			statement = connection.prepareStatement(sql);			
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 service = new DashboardDTO();
-                service.setSer_code(resultSet.getString("ser_code"));
-                service.setSer_name(resultSet.getString("ser_name"));   // 통계 자료에 출력하기 위한 ser_name
-                service.setSer_price(resultSet.getInt("ser_price"));    // 서비스별 이용 요금
-                service.setSer_cnt(0); // 서비스 이용 횟수 초기화
+                service.setService_code(resultSet.getString("service_code"));
+                service.setService_name(resultSet.getString("service_name"));   // 통계 자료에 출력하기 위한 service_name
+                service.setService_price(resultSet.getInt("service_price"));    // 서비스별 이용 요금
+                service.setService_cnt(0); // 서비스 이용 횟수 초기화
                 list.add(service);  // 매출액(value) 0으로 초기화
             }
 
             // 월별 서비스 매출액 조회
-			sql ="SELECT ser_name, res.res_date FROM ser INNER JOIN res " + 
-                    "ON res_date >= DATE_SUB(now(), INTERVAL " + indexMonth + " +1 MONTH) " +
-                    "AND res_date <= DATE_SUB(now(), INTERVAL " + indexMonth + " MONTH)";
+			sql ="SELECT service_name, reservation_date FROM service INNER JOIN reservation " + 
+                    "ON reservation_date >= DATE_SUB(now(), INTERVAL " + indexMonth + " +1 MONTH) " +
+                    "AND reservation_date <= DATE_SUB(now(), INTERVAL " + indexMonth + " MONTH)";
 
 			statement = connection.prepareStatement(sql);			
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
             	// 복수 선택 서비스 분리 : 서비스명으로 조회 후 카운트 증가
-                String[] ser_nameArr = resultSet.getString("ser_name").split(",");
-                for (String ser_name : ser_nameArr) {
+                String[] service_nameArr = resultSet.getString("service_name").split(",");
+                for (String service_name : service_nameArr) {
                     for (DashboardDTO dto : list) {
-                        if (dto.getSer_name().equals(ser_name)) {
-                            dto.setSer_cnt(dto.getSer_cnt()+1);
+                        if (dto.getService_name().equals(service_name)) {
+                            dto.setService_cnt(dto.getService_cnt()+1);
                         }
                     }
                 }
@@ -160,7 +183,7 @@ public class DashboardDAO {
             // String[] revenuesArr = new String[list.size()];
 
             // for (int i = 0; i < list.size(); i++) {
-            //     servicesArr[i] = list.get(i).getSer_name();
+            //     servicesArr[i] = list.get(i).getService_name();
             //     revenuesArr[i] = String.valueOf(list.get(i).getChart_revenue()/10000);
             // }
             
