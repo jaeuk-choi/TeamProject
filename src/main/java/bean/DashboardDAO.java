@@ -114,6 +114,7 @@ public class DashboardDAO {
         // 서비스별 월매출액 저장용
         List<DashboardDTO> list = new LinkedList<>();
         DashboardDTO service;
+        JSONArray jsonArray = null;
 		try{
 			connection = dataSource.getConnection();
             // 단일 서비스 조회
@@ -137,7 +138,6 @@ public class DashboardDAO {
 
 			statement = connection.prepareStatement(sql);			
             resultSet = statement.executeQuery();
-            JSONArray jsonArray;
             while(resultSet.next()) {
             	// 복수 선택 서비스 분리 : 서비스명으로 조회 후 카운트 증가
                 String[] ser_nameArr = resultSet.getString("ser_name").split(",");
@@ -154,25 +154,26 @@ public class DashboardDAO {
             jsonArray = new JSONArray(list);
             jsonArray.put(list);
             
-            // 배열에 저장
-            String[] servicesArr = new String[list.size()];
-            String[] revenuesArr = new String[list.size()];
+            // // 배열에 저장
+            // String[] servicesArr = new String[list.size()];
+            // String[] revenuesArr = new String[list.size()];
 
-            for (int i = 0; i < list.size(); i++) {
-                servicesArr[i] = list.get(i).getSer_name();
-                revenuesArr[i] = String.valueOf(list.get(i).getChart_revenue()/10000);
-            }
+            // for (int i = 0; i < list.size(); i++) {
+            //     servicesArr[i] = list.get(i).getSer_name();
+            //     revenuesArr[i] = String.valueOf(list.get(i).getChart_revenue()/10000);
+            // }
             
-            services = "[\"" + String.join("\", \"",  servicesArr) + "\"]";
-            revenues = "[" + String.join(", ",  revenuesArr) + "]";
-            System.out.println(services);
-            System.out.println(revenues);
+            // services = "[\"" + String.join("\", \"",  servicesArr) + "\"]";
+            // revenues = "[" + String.join(", ",  revenuesArr) + "]";
+            // System.out.println(services);
+            // System.out.println(revenues);
 		} catch (SQLException e) {
-            System.out.println("[getServiceMap] Message : " + e.getMessage());
-            System.out.println("[getServiceMap] Class   : " + e.getClass().getSimpleName());
+            System.out.println("[setService] Message : " + e.getMessage());
+            System.out.println("[setService] Class   : " + e.getClass().getSimpleName());
         } finally{
 			freeConnection();
 		}
+        return jsonArray;
     }
     // 배열로 return :  JS에 전달용
     public String getServices() {
