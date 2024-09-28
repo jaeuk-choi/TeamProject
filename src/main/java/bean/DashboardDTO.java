@@ -1,15 +1,37 @@
 package bean;
 
+import java.time.LocalDateTime;
+
 public class DashboardDTO {
     private String pd_name;
     private int pd_ea;
-    private String res_time;
+    private LocalDateTime res_date;
+	private LocalDateTime res_time;
 	private String ser_name;
 	private String ser_code;
     private int ser_price; 
     private int ser_cnt;
+    private String notice_title;
     
-    public String getPd_name() {
+	public LocalDateTime getRes_date() {
+		return res_date;
+	}
+	public void setRes_date(LocalDateTime res_date) {
+		this.res_date = res_date;
+	}
+	public LocalDateTime getRes_time() {
+		return res_time;
+	}
+	public void setRes_time(LocalDateTime res_time) {
+		this.res_time = res_time;
+	}
+    public String getNotice_title() {
+		return notice_title;
+	}
+	public void setNotice_title(String notice_title) {
+		this.notice_title = notice_title;
+	}
+	public String getPd_name() {
 		return pd_name;
 	}
 	public void setPd_name(String pd_name) {
@@ -20,12 +42,6 @@ public class DashboardDTO {
 	}
 	public void setPd_ea(int pd_ea) {
 		this.pd_ea = pd_ea;
-	}
-	public String getRes_time() {
-		return res_time;
-	}
-	public void setRes_time(String res_time) {
-		this.res_time = res_time;
 	}
 	public String getSer_name() {
 		return ser_name;
