@@ -106,10 +106,11 @@ public class ProductDAO {
         } else {
         	System.out.println("키워드 존재");
         	System.out.println(keyWord);
-        	sql = "SELECT pd.pd_code, pd.pd_name, pd.pd_price, pd.pd_ea "
+        	/*sql = "SELECT pd.pd_code, pd.pd_name, pd.pd_price, pd.pd_ea "
                 + "FROM pd "
                 + "JOIN pd_B ON pd.pd_B_code = pd_B.pd_B_code "
-                + "WHERE pd_B.pd_B_code=? AND pd.pd_name like '%" + keyWord + "%'";
+                + "WHERE pd_B.pd_B_code=? AND pd.pd_name like '%" + keyWord + "%'";*/
+        	sql = "SELECT * FROM pd WHERE " + keyWord + "%'";
         }
 		
 		try {
