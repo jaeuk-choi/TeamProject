@@ -1,6 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*, bean.*" %>
-<%
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서비스 등록</title>
+</head>
+<body>
+
+
+<% 
     request.setCharacterEncoding("UTF-8");
     // 폼에서 전달된 데이터 받기
     String service_code = request.getParameter("service_code");
@@ -19,14 +29,17 @@
         }
     }
 
-    // DAO 객체 생성 및 데이터 수정
-    ServiceDAO dao = new ServiceDAO();
-    boolean isUpdated = dao.updateService(service_code, service_name, service_price);
+    // 데이터 확인
+    System.out.println("service_code: " + service_code);
+    System.out.println("service_name: " + service_name);
+    System.out.println("service_price: " + service_price);
 
-    // 수정 결과에 따라 목록 페이지로 바로 리다이렉트
-    if (isUpdated) {
-        response.sendRedirect("service.jsp");
-    } else {
-        out.println("<script>alert('서비스 수정에 실패했습니다. 다시 시도해주세요.'); history.back();</script>");
-    }
+    // DAO 객체 생성 및 데이터 등록
+    ServiceDAO dao = new ServiceDAO();
+    dao.insertService(service_code, service_name, service_price);
+
+    // 등록 완료 후 목록 페이지로 리다이렉트
+    response.sendRedirect("service.jsp");
 %>
+</body>
+</html>
